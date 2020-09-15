@@ -15,7 +15,7 @@ function printFavoriteBooks(){
 }
 
 addFavoriteMovie("Spiderman");
-addFavoriteMovie("The king");
+addFavoriteMovie("king");
 addFavoriteMovie("Lion King");
 printFavoriteBooks();
 
