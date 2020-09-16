@@ -14,9 +14,11 @@ function printFavoriteBooks(){
 
 }
 
+addFavoriteMovie("MAD MAX");
 addFavoriteMovie("Spiderman");
-addFavoriteMovie("king");
-addFavoriteMovie("Lion King");
+addFavoriteMovie("Moana");
+addFavoriteMovie("The Lion King");
+
 printFavoriteBooks();
 
 var i =0;
