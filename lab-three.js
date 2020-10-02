@@ -1,156 +1,106 @@
+function isleapYear(year) {
+    // function which can figure whether a year is a leap year or not
+    return ((year % 4 == 0 && year % 100 != 0) || year % 400 == 0);
+}
 
+function exception(year, month, stepFive) {
+    // Some exception cases
+    var localStepFive = stepFive;
 
-function isleapYear(year) //function which can figure whether a year is a leap year or not
-{
-  if((year%4==0&&year%100 !=0)||year%400==0){
-    return true;  
-    } else{
-    return false;
+    if (isleapYear(year) && (month == 1 || month == 2 || month == "January" || month == "Feburary")) {
+        localStepFive -= 1;
     }
+    if (1600 <= year && year < 1700) {
+        return localStepFive + 6; //9
+    } else if (1700 <= year && year < 1800) {
+        return localStepFive + 4;
+    } else if (1800 <= year && year < 1900) {
+        return localStepFive + 2;
+    } else if (2000 <= year && year < 2100) {
+        return localStepFive + 6;
+    } else if (2100 <= year && year < 2200) {
+        return localStepFive + 4;
+    } else {
+        return stepFive;
+    } 
+}
+
+function getDayOfTheWeek(year, month, day) {
+    
+    var lastDigit = year % 100;
+    // bring the last two digits
+
+    var stepOne = Math.floor(lastDigit / 12);
+    var stepTwo = (lastDigit - (stepOne * 12));
+    var stepThree = Math.floor(stepTwo / 4);
+    var stepFour = day;
+    var stepFive = null;
+
+    var monthNum = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+    var monthList = ["January", "Feburary", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+    var monthCodeList = [1, 4, 4, 0, 2, 5, 0, 3, 6, 1, 4, 6];
+
+    // Find the monthCodeList
+    // If month is 'number', monthNumorList should be monthNum
+    function checkIfExists(monthNumOrList, month) {
+        if (monthNumOrList.indexOf(month) != -1) {
+            var locationInList = monthNumOrList.indexOf(month);
+            return monthCodeList[locationInList];
+        }
+    }
+
+
+
+    var monthCode = null;
+    // Detetmine user's input is number or string (monthNum or monthList)
+    if (isNaN(month) == true) {
+        monthCode = checkIfExists(monthList, month);
+    } else {
+        monthCode = checkIfExists(monthNum, parseInt(month));
+    }
+    stepFive = monthCode;
+
+    stepFive = exception(year, month, stepFive); 
+    // deine stpeFive from exception function
+
+    var stepSix = (stepOne + stepTwo + stepThree + stepFour + stepFive) % 7;
+
+    var dayOfWeek = ["Saturday", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
+    var dayWeek = null;
+
+    function findDayOfWeek(stepSix) {
+        dayWeek = dayOfWeek[stepSix];
+    }
+    findDayOfWeek(stepSix);
+
+    return dayWeek;
 }
 
 
-function getDayOfTheWeek(year,month,day){ 
+function makeCalendar (year) {
 
-  var toText = year.toString(); //to change string
-  var lastdigit = toText.slice(-2); //bring the last two digits
+    var month = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+    var days = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
 
-  var stepOne= Math.floor(lastdigit/12);
-  var stepTwo= (lastdigit-(stepOne*12));
-  var stepThree= Math.floor(stepTwo/4);
-  var stepFour=day;
-  var stepFive=0; // 얘 지정해줘야 인식함 왜???,,
+   
+    days[1] = isleapYear(year) ? 29 : 28;
+     // If the year is leap year, the total days of feburary should be changed to 29 days
+    var i = 0;
 
-  var month = month.toString();
-
-  function monthCode(month)
-  {
-      if(month.includes("Apr")||month.includes("Jul")==true||month==7||month==4){
-
-          stepFive = 0;
-
-      }else if(month.includes("Jan")||month.includes("Oct")==true||month==1||month==10){
-
-          stepFive = 1;
-
-      }else if(month.includes("May")==true||month==5){
-
-          stepFive = 2;
-
-      }else if(month.includes("Aug")==true||month==8){
-
-          stepFive = 3;
-
-      }else if(month.includes("Feb")||month.includes("Mar")||month.includes("Nov")==true||month==2||month==3||month==11){
-
-          stepFive = 4;
-      
-      }else if(month.includes("Jun")==true||month==6){
-
-          stepFive = 5;
-      }else if(month.includes("Sep")||month.includes("Dec")==true||month==9||month==12){
-
-          stepFive = 6;
-      }    
+    while (i < 12) {
+        var j = 0;
+        while (j < days[i]) {
+            j++;
+            console.log((i + 1) + "-" + j + "-" + year + " is a " + getDayOfTheWeek(year, month[i], j));
+        }
+        i++;
+    }
 }
-monthCode(month); 
 
-function exception(year){  //exception cases
-
-  if(isleapYear(year)&&(month.includes("Jan") || month.includes("Feb")||month==1||month==2)){      
-    stepFive -= 1;
-  }
-  if (1600 <= year && year < 1700){ // 중요 중요 질문해야함
-    stepFive = stepFive+6;
-  }else if(1700 <= year && year < 1800){
-    stepFive = stepFive+4;
-  }else if(1800 <= year && year < 1900){
-    stepFive = stepFive+2;
-  }else if(2000 <= year && year < 2100){
-    stepFive = stepFive+6;
-  }else if(2100 <= year && year < 2200){
-    stepFive = stepFive+4;
-  }else{
-    return stepFive;
-  }
-  }
-  exception(year);
+//makeCalendar(2020);
+//console.log(getDayOfTheWeek(1996, "3", 18));
+//console.log(isleapYear(1890));
 
 
-  var stepSix =(stepOne+stepTwo+stepThree+stepFour+stepFive)%7;
-
-  function findDayOfWeek(){
-
-      switch (stepSix) {
-
-      case 0:
-    
-      dayOfWeek = "Saturday";
-    
-        break;
-    
-      case 1:
-    
-      dayOfWeek = "Sunday";
-    
-        break;
-    
-      case 2:
-    
-      dayOfWeek = "Monday";
-    
-        break;
-    
-      case 3:
-    
-      dayOfWeek = "Tuesday";
-    
-        break;
-    
-      case 4:
-    
-      dayOfWeek = "Wednesday";
-    
-        break;
-    
-      case 5:
-    
-      dayOfWeek = "Thursday";
-    
-        break;
-    
-      case 6:
-    
-      dayOfWeek = "Friday";
-    }
-    }
-  findDayOfWeek();
-    return dayOfWeek;
-    }
-
-
-  function makeCalendar(year){
-
-  var calendar ={1:31,2:28,3:31,4:30,5:31,6:30,7:31,8:31,9:30,10:31,11:30,12:31};
-
-  j=0;
-
-  if (isleapYear(year)){ //글로벌 함수일때만 호출 가능!!
-    calendar ={1:31,2:29,3:31,4:30,5:31,6:30,7:31,8:31,9:30,10:31,11:30,12:31}; //값 한개만 못바꾸나?
-    console.log("This is a leap year.");
-  }
-
-  for (var x in calendar) { 
-  console.log(x+"(Mon)");
-  while(j<calendar[x]){
-    j++; 
-    getDayOfTheWeek(year,x,j);
-
-    console.log(x+"-"+j+"-"+year+" is a "+dayOfWeek);
-  }
-  j = 0;  //얘를 안넣어주면 안돌아감..
-  }
-  }
-  //console.log(getDayOfTheWeek(2020,"Sep",25));
-
-  module.exports ={isleapYear,makeCalendar,getDayOfTheWeek};//Using { } to export functions more than two
+module.exports = { isleapYear, makeCalendar, getDayOfTheWeek };
+    // Using { } to export functions more than two
